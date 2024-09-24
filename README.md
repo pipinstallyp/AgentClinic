@@ -48,6 +48,14 @@ in the env create
 OPEN_ROUTER_API_KEY='REPLACE WITH YOUR API KEY'
 CEREBRAS_API_KEY='REPLACE WITH YOUR API KEY'
 ```
+
+
+## QUICK COMMAND TO RUN
+
+```
+python agentclinic.py --doctor_llm 'o1-mini'  --patient_llm 'llama3.1-70b' --moderator_llm 'llama3.1-70b'
+```
+
 ## Evaluation
 
 All of the models from the paper are available (GPT-4/4o/3.5, Mixtral-8x7B, Llama-70B-chat). You can try them for any of the agents, make sure you have either an OpenAI or Replicate key ready for evaluation! HuggingFace wrappers are also implemented if you don't want to use API keys.
