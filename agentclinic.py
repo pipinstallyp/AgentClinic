@@ -2,6 +2,9 @@ import argparse
 import anthropic
 from transformers import pipeline
 import openai, re, random, time, json, replicate, os
+from dotenv import load_dotenv
+# Load environment variables from .env file
+load_dotenv('config/.env')
 
 llama2_url = "meta/llama-2-70b-chat"
 llama3_url = "meta/meta-llama-3-70b-instruct"
@@ -18,7 +21,10 @@ def inference_huggingface(prompt, pipe):
 
 
 def query_model(model_str, prompt, system_prompt, tries=30, timeout=20.0, image_requested=False, scene=None, max_prompt_len=2**14, clip_prompt=False):
-    if model_str not in ["gpt4", "gpt3.5", "gpt4o", 'llama-2-70b-chat', "mixtral-8x7b", "gpt-4o-mini", "llama-3-70b-instruct", "gpt4v", "claude3.5sonnet", "o1-preview"] and "_HF" not in model_str:
+    cerebras_api_key = os.getenv("CEREBRAS_API_KEY")
+    openrouter_api_key = os.getenv("OPEN_ROUTER_API_KEY")
+    
+    if model_str not in ["gpt4", "gpt3.5", "gpt4o", 'llama-2-70b-chat', "mixtral-8x7b", "gpt-4o-mini", "llama-3-70b-instruct", "gpt4v", "claude3.5sonnet", "o1-preview", "o1-mini",'llama3.1-70b'] and "_HF" not in model_str:
         raise Exception("No model by the name {}".format(model_str))
     for _ in range(tries):
         if clip_prompt: prompt = prompt[:max_prompt_len]
@@ -109,6 +115,32 @@ def query_model(model_str, prompt, system_prompt, tries=30, timeout=20.0, image_
                     )
                 answer = response["choices"][0]["message"]["content"]
                 answer = re.sub("\s+", " ", answer)
+            elif model_str == "o1-mini":
+                messages = [
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": prompt}]
+                response = openai.ChatCompletion.create(
+                        model="openai/o1-mini",
+                        messages=messages,
+                        temperature=0.05,
+                        max_tokens=200,
+                        base_url="https://openrouter.ai/api/v1",
+                        api_key=openrouter_api_key,
+                    )
+                answer = response["choices"][0]["message"]["content"]
+                answer = re.sub("\s+", " ", answer)
+            elif model_str == "llama3.1-70b":
+                messages = [
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": prompt}]
+                response = openai.ChatCompletion.create(
+                        model="llama3.1-70b",
+                        messages=messages,
+                        temperature=0.05,
+                        max_tokens=200,
+                        base_url="https://api.cerebras.ai/v1",
+                        api_key=cerebras_api_key,
+                    )
             elif model_str == "gpt3.5":
                 messages = [
                     {"role": "system", "content": system_prompt},

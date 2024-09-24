@@ -1,10 +1,13 @@
-# AgentClinic: a multimodal agent benchmark to evaluate AI in simulated clinical environments
+# AgentClinic: a multimodal agent benchmark to evaluate AI in simulated clinical environments (FOR TESTING)
 
 <p align="center">
   <img src="media/mainfigure.png" alt="Demonstration of the flow of AgentClinic" style="width: 99%;">
 </p>
 
-## Release
+## Release (by PeePa)
+- [09/24/2024] 🍓 Support for o1-mini and llama3.1-7b. Use openrouter and cerebras API
+
+## Release (by researchers)
 - [09/13/2024] 🍓 We release new results and support for o1!
 - [08/17/2024] 🎆 Major updates 🎇
   - 🏥 A new suite of cases (**AgentClinic-MIMIC-IV**), based on real clinical cases from MIMIC-IV (requires approval from https://physionet.org/content/mimiciv/2.2/)! 
@@ -28,11 +31,23 @@
 
 ## Install
 
-1. This library has few dependencies, so you can simply install the requirements.txt!
+1. This library has few dependencies, so you can simply install the requirements.txt! (use uv to install)
 ```bash
-pip install -r requirements.txt
+uv venv agentclinic_env 
+cd AgentClinic
+uv pip install -r requirements.txt
 ```
 
+2. Save the API keys in .env
+```bash
+touch .env
+```
+
+in the env create
+```
+OPEN_ROUTER_API_KEY='REPLACE WITH YOUR API KEY'
+CEREBRAS_API_KEY='REPLACE WITH YOUR API KEY'
+```
 ## Evaluation
 
 All of the models from the paper are available (GPT-4/4o/3.5, Mixtral-8x7B, Llama-70B-chat). You can try them for any of the agents, make sure you have either an OpenAI or Replicate key ready for evaluation! HuggingFace wrappers are also implemented if you don't want to use API keys.
